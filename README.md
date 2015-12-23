@@ -1,5 +1,5 @@
-# TestConsoleWindow
-This is test console window for unity 5 .
+# UnityConsoleWindow
+This is test console window for unity 5 and my unity version is 5.1.1f.
 
 And most function is done by garry.
 Here is where i found it.http://garry.tv/2014/04/23/unity-batchmode-console/
