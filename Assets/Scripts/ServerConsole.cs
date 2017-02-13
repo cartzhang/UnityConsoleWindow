@@ -36,6 +36,8 @@ public class ServerConsole : MonoBehaviour
 	void OnInputText( string obj )
 	{
         //ConsoleSystem.Run(obj, true);
+        Debug.Log(obj.ToString());
+
 	}
  
 	//
