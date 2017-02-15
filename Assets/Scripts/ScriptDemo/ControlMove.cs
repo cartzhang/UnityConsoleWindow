@@ -54,7 +54,6 @@ public partial class ControlMove
     {
         float speed = (float)ojb.MsgValue;
         movespeed = speed;
-        Debug.Log("current cube move speed " + movespeed);
     }
 
     public static string GETNAME<T>(T myInput) where T : class

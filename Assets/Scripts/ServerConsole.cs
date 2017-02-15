@@ -36,7 +36,6 @@ public class ServerConsole : MonoBehaviour
             string getvaluve = obj.Substring(obj.LastIndexOf(' '));
             float speed = -1;
             float.TryParse(getvaluve, out speed);
-            Debug.Log("set new speed is " + speed);
             NotificationManager.Instance.Notify("movespeed", speed);
         }
 	}

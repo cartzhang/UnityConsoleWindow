@@ -71,8 +71,7 @@ namespace ConsoleTestWindows
             catch (System.Exception ex)
             {
                 //Console.WriteLine(ex.Message);
-            }
-			
+            }			
 
 			var strtext = inputString;
 			inputString = "";
