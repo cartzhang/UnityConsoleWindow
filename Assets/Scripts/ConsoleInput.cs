@@ -23,20 +23,33 @@ namespace ConsoleTestWindows
 
 		public void RedrawInputLine()
 		{
-			if ( inputString.Length == 0 ) return;
-
 			if ( Console.CursorLeft > 0 )
 				ClearLine();
+			if ( inputString.Length == 0 ) return;
 
 			System.Console.ForegroundColor = ConsoleColor.Green;
-			System.Console.Write( inputString );
+            try
+            {
+                System.Console.Write(inputString);
+            }
+            catch (System.Exception ex)
+            {
+                //System.Console.WriteLine("Error: " + ex.Message);
+            }
 		}
 
 		internal void OnBackspace()
 		{
-			if ( inputString.Length < 1 ) return;
-
-			inputString = inputString.Substring( 0, inputString.Length - 1 );
+            int inputLength = inputString.Length;
+            if (inputLength  <= 0 ) return;
+            if (inputLength == 1)
+            {
+                inputString = "";
+            }
+            else
+            {
+                inputString = inputString.Substring(0, inputLength - 1);
+            }
 			RedrawInputLine();
 		}
 
@@ -49,8 +62,17 @@ namespace ConsoleTestWindows
 		internal void OnEnter()
 		{
 			ClearLine();
-			System.Console.ForegroundColor = ConsoleColor.Green;
-			System.Console.WriteLine( "> " + inputString );
+            DefaultCommand(inputString);
+            System.Console.ForegroundColor = ConsoleColor.Green;
+            try
+            {
+                System.Console.WriteLine("> " + inputString);
+            }
+            catch (System.Exception ex)
+            {
+                //Console.WriteLine(ex.Message);
+            }
+			
 
 			var strtext = inputString;
 			inputString = "";
@@ -91,5 +113,27 @@ namespace ConsoleTestWindows
 				return;
 			}
 		}
+
+        /// <summary>
+        /// add command line 
+        /// </summary>
+        /// <param name="inputStr"></param>
+        internal void DefaultCommand(string inputStr)
+        {
+            if (inputStr.Length == 0) return;
+
+            switch (inputStr.ToLower())
+            {
+                case "clear":
+                    System.Console.Clear();
+                    break;
+                case "exit":
+                    ServerConsole.SetIshowWindow(false);
+                    break;
+                default:
+                    break;
+            }
+
+        }
 	}
 }

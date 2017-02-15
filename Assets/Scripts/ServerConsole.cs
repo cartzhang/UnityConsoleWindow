@@ -2,30 +2,23 @@
 #define UNITY_STANDALONE_WIN
 using UnityEngine;
 using System.Collections;
+using SLQJ;
 
 public class ServerConsole : MonoBehaviour
 {
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 
-    ConsoleTestWindows.ConsoleWindow console = new ConsoleTestWindows.ConsoleWindow();
-    ConsoleTestWindows.ConsoleInput input = new ConsoleTestWindows.ConsoleInput();
- 
-	string strInput;
-	
+    private ConsoleTestWindows.ConsoleWindow console = new ConsoleTestWindows.ConsoleWindow();
+    private ConsoleTestWindows.ConsoleInput input = new ConsoleTestWindows.ConsoleInput();
+
+    private static bool ishowWindow = false;
+    private bool oldWindowState = false;
 	//
 	// Create console window, register callbacks
 	//
 	void Awake() 
 	{
 		DontDestroyOnLoad( gameObject );
- 
-		console.Initialize();
-		console.SetTitle( "Test Server" );
- 
-		input.OnInputText += OnInputText;
- 
-		Application.RegisterLogCallback( HandleLog );
- 
 		Debug.Log( "Console Started" );
 	}
  
@@ -35,9 +28,17 @@ public class ServerConsole : MonoBehaviour
 	//
 	void OnInputText( string obj )
 	{
-        //ConsoleSystem.Run(obj, true);
-        Debug.Log(obj.ToString());
-
+        this.ConsolePrint(obj);
+        int subLen = obj.IndexOf(' ');
+        if (subLen < 0) return;
+        if (obj.Substring(0, subLen) ==  "movespeed")
+        {
+            string getvaluve = obj.Substring(obj.LastIndexOf(' '));
+            float speed = -1;
+            float.TryParse(getvaluve, out speed);
+            Debug.Log("set new speed is " + speed);
+            NotificationManager.Instance.Notify("movespeed", speed);
+        }
 	}
  
 	//
@@ -61,15 +62,43 @@ public class ServerConsole : MonoBehaviour
 		// If we were typing something re-add it.
 		input.RedrawInputLine();
 	}
- 
-	//
-	// Update the input every frame
-	// This gets new key input and calls the OnInputText callback
-	//
-	void Update()
-	{
-		input.Update();
-	}
+
+    //
+    // Update the input every frame
+    // This gets new key input and calls the OnInputText callback
+    //
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            ishowWindow = !ishowWindow;
+            if (ishowWindow)
+            {
+                console = new ConsoleTestWindows.ConsoleWindow();
+                input = new ConsoleTestWindows.ConsoleInput();
+                console.Initialize();
+                console.SetTitle("Test command");
+                input.OnInputText += OnInputText;
+                Application.logMessageReceived += HandleLog;
+            }
+            else
+            {
+                CloseConsoleWindow();
+            }
+            oldWindowState = ishowWindow;
+        }
+        // input update
+        if (ishowWindow && null != input)
+        {
+            input.Update();
+        }
+
+        if (ishowWindow != oldWindowState && !ishowWindow)
+        {
+            CloseConsoleWindow();
+        }
+        oldWindowState = ishowWindow;
+    }
  
 	//
 	// It's important to call console.ShutDown in OnDestroy
@@ -78,8 +107,33 @@ public class ServerConsole : MonoBehaviour
 	//
 	void OnDestroy()
 	{
-		console.Shutdown();
-	}
- 
+        CloseConsoleWindow();
+    }
+
+    void CloseConsoleWindow()
+    {
+        if (console != null)
+        {
+            console.Shutdown();
+            console = null;
+            input = null;
+        }
+    }
+    // control by other .
+    public static void SetIshowWindow(bool flag)
+    {   
+       ishowWindow = flag;
+    }
+
 #endif
+}
+
+public static class ExtendDebugClass
+{
+    public static void ConsolePrint(this MonoBehaviour mono, string message)
+    {
+        if (message.Length < 0) return;
+        System.Console.ForegroundColor = System.ConsoleColor.Magenta;
+        System.Console.WriteLine(message);
+    }
 }
