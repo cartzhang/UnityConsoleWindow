@@ -1,4 +1,17 @@
 # UnityConsoleWindow
+
+2017-02-16 
+
+本次修改主要是根据之前使用的体验做了修改。
+
+2017年之前版本，只是在游戏开始时候会自动开启控制台窗口，然后在里面可以输入或代码里调用输出。
+
+2017年2月16号现在版本，通过tab按键或～按键来调用和关闭控制台窗口。
+当然主要功能还是没有改变，就是可以输入和输出信息。
+命令行窗口上添加了两个命令，一个clear的清屏命令，一个是exit的退出命令行窗口命令。
+
+
+-----------------------
 This is test console window for unity 5 and my unity version is 5.1.1f.
 
 And most function is done by garry.
