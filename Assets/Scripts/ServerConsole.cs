@@ -132,7 +132,6 @@ public static class ExtendDebugClass
     public static void ConsolePrint(this MonoBehaviour mono, string message)
     {
         if (message.Length < 0) return;
-        System.Console.ForegroundColor = System.ConsoleColor.Magenta;
         System.Console.WriteLine(message);
     }
 }
